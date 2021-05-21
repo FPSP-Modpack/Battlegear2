@@ -64,7 +64,7 @@ public class Battlegear {
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-        if(Loader.isModLoaded("TConstruct")){//Tinker's Construct support for tabs in main inventory
+        if((Loader.isModLoaded("TConstruct") || Loader.isModLoaded("fpsp")) && BattlegearConfig.enableTConTabs){//Tinker's Construct support for tabs in main inventory
             proxy.tryUseTConstruct();
         }
         if(Loader.isModLoaded("DynamicLights_thePlayer")){//Dynamic Light support for held light in left hand

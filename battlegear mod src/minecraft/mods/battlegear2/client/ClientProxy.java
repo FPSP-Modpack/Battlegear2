@@ -1,5 +1,11 @@
 package mods.battlegear2.client;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -15,6 +21,7 @@ import mods.battlegear2.api.shield.IShield;
 import mods.battlegear2.client.gui.BattlegearGuiKeyHandler;
 import mods.battlegear2.client.renderer.*;
 import mods.battlegear2.client.utils.BattlegearClientUtils;
+import mods.battlegear2.client.utils.TConstructHandler;
 import mods.battlegear2.heraldry.TileEntityFlagPole;
 import mods.battlegear2.packet.BattlegearAnimationPacket;
 import mods.battlegear2.packet.SpecialActionPacket;
@@ -36,16 +43,9 @@ import net.minecraft.util.Vec3;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-
 public final class ClientProxy extends CommonProxy {
 
     public static boolean tconstructEnabled = false;
-    public static Method updateTab, addTabs;
     private static Object dynLightPlayerMod;
     private static Method dynLightFromItemStack, refresh;
     public static ItemStack heldCache;
@@ -227,22 +227,7 @@ public final class ClientProxy extends CommonProxy {
     
     @Override
     public void tryUseTConstruct() {
-    	try {
-            Object tcManager = Class.forName("tconstruct.TConstruct").getField("pulsar").get(null);
-            if((Boolean)tcManager.getClass().getMethod("isPulseLoaded", String.class).invoke(tcManager, "Tinkers' Armory")) {
-                Class<?> tabRegistry = Class.forName("tconstruct.client.tabs.TabRegistry");
-                Class abstractTab = Class.forName("tconstruct.client.tabs.AbstractTab");
-                Method registerTab = tabRegistry.getMethod("registerTab", abstractTab);
-                updateTab = tabRegistry.getMethod("updateTabValues", int.class, int.class, Class.class);
-                addTabs = tabRegistry.getMethod("addTabsToList", List.class);
-                registerTab.invoke(null, Class.forName("mods.battlegear2.client.gui.controls.EquipGearTab").newInstance());
-                if (Battlegear.debug) {
-                    registerTab.invoke(null, Class.forName("mods.battlegear2.client.gui.controls.SigilTab").newInstance());
-                }
-                tconstructEnabled = true;
-            }
-		} catch (Throwable ignored) {
-		}
+    	TConstructHandler.initTabs();
 	}
 
     @Override

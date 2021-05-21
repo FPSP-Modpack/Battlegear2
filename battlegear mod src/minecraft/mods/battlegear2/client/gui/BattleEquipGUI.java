@@ -1,7 +1,11 @@
 package mods.battlegear2.client.gui;
 
+import org.lwjgl.opengl.GL11;
+
 import mods.battlegear2.Battlegear;
 import mods.battlegear2.client.ClientProxy;
+import mods.battlegear2.client.gui.controls.EquipGearTab;
+import mods.battlegear2.client.utils.TConstructHandler;
 import mods.battlegear2.gui.BattlegearGUIHandeler;
 import mods.battlegear2.gui.ContainerBattle;
 import mods.battlegear2.packet.BattlegearGUIPacket;
@@ -9,12 +13,10 @@ import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.InventoryEffectRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
 
 public final class BattleEquipGUI extends InventoryEffectRenderer {
 
     public static final ResourceLocation resource = new ResourceLocation("battlegear2", "textures/gui/Equip GUI.png");
-    public static Class equipTab;
     
     /**
      * x size of the inventory window in pixels. Defined as float, passed as int
@@ -40,15 +42,8 @@ public final class BattleEquipGUI extends InventoryEffectRenderer {
         super.initGui();
         if(ClientProxy.tconstructEnabled){
             this.buttonList.clear();
-            try{
-                if(equipTab==null){
-                    equipTab = Class.forName("mods.battlegear2.client.gui.controls.EquipGearTab");
-                }
-                ClientProxy.updateTab.invoke(null, guiLeft, guiTop, equipTab);
-                ClientProxy.addTabs.invoke(null, this.buttonList);
-            }catch(Exception e){
-                ClientProxy.tconstructEnabled = false;
-            }
+            TConstructHandler.updateTab(guiLeft, guiTop, EquipGearTab.class);
+            TConstructHandler.addTabs(buttonList);
         }
     }
 

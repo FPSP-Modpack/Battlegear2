@@ -63,6 +63,7 @@ public class BattlegearConfig {
 	public static String[] disabledItems = new String[0];
     public static String[] disabledRecipies = new String[0];
     public static String[] disabledRenderers = new String[0];
+    public static boolean enableTConTabs = true;
 
     public static double[] skeletonArrowSpawnRate = new double[ItemMBArrow.names.length];
 	public static int[] quiverBarOffset = new int[2], shieldBarOffset = new int[2], battleBarOffset = new int[4];
@@ -70,6 +71,7 @@ public class BattlegearConfig {
     public static void getConfig(Configuration config) {
         file = config;
 
+        enableTConTabs = config.get(Configuration.CATEGORY_GENERAL, "Enable Tinker's Construct Inventory Tabs", true).getBoolean();
         alwaysShowBattleBar=config.get(Configuration.CATEGORY_GENERAL, "Always Show Battlegear Slots", alwaysShowBattleBar).getBoolean();
         enableGUIKeys=config.get(Configuration.CATEGORY_GENERAL, "Enable GUI Keys", enableGUIKeys).getBoolean();
         enableGuiButtons=config.get(Configuration.CATEGORY_GENERAL, "Enable GUI Buttons", enableGuiButtons).getBoolean();
